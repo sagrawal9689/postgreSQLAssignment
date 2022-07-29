@@ -50,6 +50,7 @@ con = psycopg2.connect(
 #cursor 
 cur = con.cursor()
 
+# dummy data
 device_data= []
 
 uuidList= [uuid.uuid4() for i in range(100)]
@@ -60,11 +61,15 @@ def convertStringToTimeObject(givenTime):
     
     return date_time_obj
 
+# creating dummy data
+
 for i in range(1000):
     device_data.append((random.randint(1,1000),convertStringToTimeObject(f"{random.randint(1,12)} {random.randint(1,28)} {random.randint(2000,2023)}"),random.randint(1,100),uuidList[random.randint(0,99)]))
 
 args_str = b','.join(cur.mogrify("(%s,%s,%s,%s)", x) for x in device_data)
 args_str=args_str.decode("utf8")
+
+# inserting 1000 rows using single execute using psycopg2
 
 cur.execute("INSERT INTO device_data (global_dpid,ts,value,device_id) VALUES " + args_str) 
 
