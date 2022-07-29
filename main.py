@@ -73,6 +73,8 @@ cur.execute("INSERT INTO device_data (global_dpid,ts,value,device_id) VALUES " +
 #commit the transcation 
 con.commit()
 
+# querying data for a specific device_id using sqlalchemy
+
 record = session.query(DeviceData).filter_by(device_id=uuidList[0]).all()
 
 print("All the devices with the given id are : \n")
@@ -80,7 +82,7 @@ print("All the devices with the given id are : \n")
 for r in record:
     print(r)    
 
-#close the cursor
+# querying data within a specific time range for a specific device_id using psycopg2
 
 tMin= datetime.strptime("2 17 2001",r'%m %d %Y')
 tMax= datetime.strptime("2 17 2020",r'%m %d %Y')
@@ -89,8 +91,9 @@ result= cur.execute(f"SELECT global_dpid, ts , value FROM device_data WHERE devi
 
 result= cur.fetchall()
 
-import csv
+# creating csv from the result data
 
+import csv
 
 with open(f'{uuidList[0]}.csv','w',newline='') as out:
     csv_out=csv.writer(out)
@@ -98,6 +101,8 @@ with open(f'{uuidList[0]}.csv','w',newline='') as out:
     for row in result:
         csv_out.writerow(row)
 
+
+#close the cursor
 cur.close()
 
 #close the connection
